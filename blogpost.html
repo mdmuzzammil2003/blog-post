@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How much battery storage do you need? · Solar blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- DESIGN TOKENS (advanced) ---------- */
+    :root {
+      --orange: #f97316;
+      --orange-light: #fdba74;
+      --orange-soft: #fff7ed;
+      --orange-glow: rgba(249, 115, 22, 0.12);
+      --dark-blue: #0a1e33;
+      --dark-blue-mid: #14304f;
+      --dark-blue-soft: #1e3a5f;
+      --white: #ffffff;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-500: #64748b;
+      --gray-700: #334155;
+      --text-dark: #0f172a;
+      --text-soft: #334155;
+      --radius-2xl: 28px;
+      --radius-xl: 22px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 2px 6px rgba(10, 30, 51, 0.04), 0 1px 3px rgba(10, 30, 51, 0.03);
+      --shadow-md: 0 12px 28px -6px rgba(10, 30, 51, 0.08), 0 4px 12px -2px rgba(10, 30, 51, 0.04);
+      --shadow-lg: 0 24px 48px -12px rgba(10, 30, 51, 0.15), 0 8px 20px -6px rgba(10, 30, 51, 0.06);
+      --shadow-orange: 0 12px 32px -8px rgba(249, 115, 22, 0.25);
+      --transition: 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--gray-50);
+      color: var(--text-dark);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle background pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(249, 115, 22, 0.04) 0%, transparent 45%),
+        radial-gradient(circle at 85% 75%, rgba(20, 48, 79, 0.04) 0%, transparent 45%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ---------- MAIN LAYOUT ---------- */
+    .blog-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 5rem;
+    }
+
+    /* Two-column layout on large screens for content + side notes */
+    .blog-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    @media (min-width: 960px) {
+      .blog-layout {
+        grid-template-columns: minmax(0, 1fr) 280px;
+        gap: 3.5rem;
+      }
+    }
+
+    /* ---------- HERO SECTION ---------- */
+    .hero {
+      margin-bottom: 2.5rem;
+      text-align: left;
+      position: relative;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, var(--orange-soft), #fff);
+      color: var(--orange);
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      padding: 0.5rem 1.1rem 0.5rem 1rem;
+      border-radius: 40px;
+      margin-bottom: 1.4rem;
+      border: 1px solid rgba(249, 115, 22, 0.25);
+      box-shadow: 0 2px 8px rgba(249, 115, 22, 0.08);
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--orange);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.2); }
+    }
+
+    h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.1rem, 5.5vw, 3.1rem);
+      line-height: 1.12;
+      color: var(--dark-blue);
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    h1 .highlight {
+      background: linear-gradient(135deg, var(--orange), #fb923c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subhead {
+      font-size: 1.15rem;
+      color: var(--gray-500);
+      max-width: 620px;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+      color: var(--gray-500);
+      font-weight: 500;
+    }
+
+    .meta-icon {
+      width: 18px;
+      height: 18px;
+      color: var(--orange);
+    }
+
+    /* ---------- FEATURED IMAGE ---------- */
+    .featured-image-wrap {
+      position: relative;
+      margin: 2rem 0 2.5rem;
+      border-radius: var(--radius-2xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      isolation: isolate;
+    }
+
+    .featured-image-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 50%, rgba(10, 30, 51, 0.35) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .featured-image {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .featured-image-wrap:hover .featured-image {
+      transform: scale(1.03);
+    }
+
+    .featured-image-caption {
+      position: absolute;
+      bottom: 1.2rem;
+      left: 1.5rem;
+      right: 1.5rem;
+      z-index: 2;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .featured-image-caption svg {
+      width: 18px;
+      height: 18px;
+      opacity: 0.9;
+    }
+
+    /* ---------- CONTENT CARDS ---------- */
+    .content-card {
+      background: var(--white);
+      border-radius: var(--radius-2xl);
+      padding: 2.5rem 2.2rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(226, 232, 240, 0.7);
+      position: relative;
+    }
+
+    @media (max-width: 600px) {
+      .content-card {
+        padding: 1.8rem 1.3rem;
+      }
+    }
+
+    /* First paragraph drop cap */
+    .intro-text::first-letter {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 3.4rem;
+      font-weight: 800;
+      color: var(--orange);
+      float: left;
+      line-height: 0.85;
+      margin: 0.1rem 0.6rem 0 0;
+    }
+
+    p {
+      margin-bottom: 1.5rem;
+      font-size: 1.05rem;
+      color: var(--text-soft);
+      line-height: 1.7;
+    }
+
+    h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.65rem;
+      letter-spacing: -0.02em;
+      color: var(--dark-blue);
+      margin: 2.8rem 0 1.2rem;
+      line-height: 1.25;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    h2::before {
+      content: '';
+      width: 6px;
+      height: 28px;
+      background: linear-gradient(180deg, var(--orange), var(--orange-light));
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    h2:first-of-type {
+      margin-top: 0.5rem;
+    }
+
+    strong {
+      color: var(--dark-blue);
+      font-weight: 600;
+    }
+
+    /* ---------- INLINE IMAGES ---------- */
+    .inline-image-wrap {
+      position: relative;
+      margin: 2.5rem 0 2rem;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: box-shadow var(--transition);
+    }
+
+    .inline-image-wrap:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .inline-image {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .inline-image-wrap:hover .inline-image {
+      transform: scale(1.04);
+    }
+
+    .inline-image-wrap .img-label {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 0.35rem 0.9rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      color: var(--dark-blue);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .image-caption {
+      font-size: 0.83rem;
+      color: var(--gray-500);
+      margin-top: 0.8rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 500;
+    }
+
+    .image-caption svg {
+      width: 14px;
+      height: 14px;
+      color: var(--orange);
+      flex-shrink: 0;
+    }
+
+    /* ---------- HIGHLIGHT BOX (advanced) ---------- */
+    .highlight-box {
+      position: relative;
+      background: linear-gradient(135deg, var(--orange-soft) 0%, #fff 100%);
+      padding: 2rem 2rem 2rem 2.5rem;
+      border-radius: var(--radius-xl);
+      margin: 2.5rem 0;
+      border: 1px solid rgba(249, 115, 22, 0.15);
+      box-shadow: 0 8px 24px -6px rgba(249, 115, 22, 0.1);
+      overflow: hidden;
+    }
+
+    .highlight-box::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+      background: linear-gradient(180deg, var(--orange), var(--orange-light));
+    }
+
+    .highlight-box::after {
+      content: '';
+      position: absolute;
+      right: -20px;
+      top: -20px;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(249, 115, 22, 0.12), transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .highlight-box p {
+      margin-bottom: 0;
+      font-size: 1.05rem;
+      color: var(--dark-blue);
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+    }
+
+    .highlight-box .hl-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: var(--orange);
+      border-radius: 10px;
+      color: white;
+      margin-bottom: 1rem;
+      box-shadow: 0 6px 16px rgba(249, 115, 22, 0.3);
+    }
+
+    .highlight-box .hl-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ---------- TABLE (advanced) ---------- */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 2.5rem 0 2rem;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--gray-200);
+      background: var(--white);
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.98rem;
+      min-width: 540px;
+    }
+
+    th {
+      background: linear-gradient(135deg, var(--dark-blue), var(--dark-blue-mid));
+      color: var(--white);
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 1.1rem 1.3rem;
+      text-align: left;
+      position: sticky;
+      top: 0;
+    }
+
+    th:first-child {
+      border-top-left-radius: var(--radius-xl);
+    }
+
+    th:last-child {
+      border-top-right-radius: var(--radius-xl);
+    }
+
+    td {
+      padding: 1.1rem 1.3rem;
+      border-bottom: 1px solid var(--gray-100);
+      color: var(--text-soft);
+      vertical-align: top;
+      transition: background 0.15s ease;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: #fafcff;
+    }
+
+    td:first-child {
+      font-weight: 600;
+      color: var(--dark-blue);
+    }
+
+    /* Capacity pill styling */
+    .capacity-pill {
+      display: inline-block;
+      background: var(--orange-soft);
+      color: var(--orange);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 30px;
+      border: 1px solid rgba(249, 115, 22, 0.2);
+      white-space: nowrap;
+    }
+
+    /* ---------- SIDEBAR (advanced) ---------- */
+    .sidebar {
+      display: none;
+    }
+
+    @media (min-width: 960px) {
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        position: sticky;
+        top: 1.5rem;
+      }
+    }
+
+    .sidebar-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(226, 232, 240, 0.7);
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+
+    .sidebar-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .sidebar-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--dark-blue);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sidebar-title svg {
+      width: 18px;
+      height: 18px;
+      color: var(--orange);
+    }
+
+    .toc-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .toc-list li {
+      margin-bottom: 0.65rem;
+    }
+
+    .toc-list a {
+      font-size: 0.88rem;
+      color: var(--gray-700);
+      text-decoration: none;
+      display: block;
+      padding: 0.35rem 0;
+      border-left: 2px solid transparent;
+      padding-left: 0.7rem;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .toc-list a:hover {
+      color: var(--orange);
+      border-left-color: var(--orange);
+      padding-left: 1rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .stat-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+      background: var(--orange-soft);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--orange);
+      flex-shrink: 0;
+    }
+
+    .stat-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--gray-500);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .stat-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--dark-blue);
+    }
+
+    /* ---------- CLOSING NOTE ---------- */
+    .closing-note {
+      background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+      border-radius: var(--radius-2xl);
+      padding: 2rem 2.2rem;
+      margin: 3rem 0 1.5rem;
+      border: 1px solid var(--gray-200);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .closing-note::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--orange), var(--orange-light), var(--dark-blue));
+      border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+    }
+
+    .closing-note h2 {
+      margin-top: 0;
+      font-size: 1.4rem;
+    }
+
+    .closing-note h2::before {
+      display: none;
+    }
+
+    .closing-note p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ---------- FINAL CTA ---------- */
+    .final-cta {
+      background: linear-gradient(135deg, var(--dark-blue) 0%, var(--dark-blue-mid) 100%);
+      border-radius: var(--radius-2xl);
+      padding: 2.5rem 2.2rem;
+      margin: 2.5rem 0 1rem;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .final-cta::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(249, 115, 22, 0.25), transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .final-cta h2 {
+      color: white;
+      margin-top: 0;
+      font-size: 1.6rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .final-cta h2::before {
+      background: var(--orange);
+    }
+
+    .final-cta p {
+      color: rgba(255, 255, 255, 0.85);
+      position: relative;
+      z-index: 1;
+    }
+
+    .final-cta p:last-child {
+      margin-bottom: 0;
+    }
+
+    .final-cta strong {
+      color: var(--orange-light);
+    }
+
+    /* ---------- SCROLL REVEAL ---------- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ---------- MOBILE RESPONSIVE ---------- */
+    @media (max-width: 600px) {
+      .blog-wrapper {
+        padding: 1.5rem 1rem 3.5rem;
+      }
+
+      h1 {
+        font-size: 1.9rem;
+      }
+
+      .featured-image {
+        height: 260px;
+      }
+
+      .inline-image {
+        height: 200px;
+      }
+
+      .highlight-box {
+        padding: 1.5rem 1.5rem 1.5rem 1.8rem;
+      }
+
+      .content-card {
+        padding: 1.6rem 1.2rem;
+      }
+
+      th, td {
+        padding: 0.85rem 0.9rem;
+        font-size: 0.88rem;
+      }
+
+      .final-cta {
+        padding: 2rem 1.5rem;
+      }
+
+      .closing-note {
+        padding: 1.6rem 1.4rem;
+      }
+    }
+
+    /* ---------- SCROLL PROGRESS BAR ---------- */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--orange), var(--orange-light));
+      width: 0%;
+      z-index: 200;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <!-- Scroll progress bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <div class="blog-wrapper">
+    <div class="blog-layout">
+      <!-- MAIN CONTENT COLUMN -->
+      <main>
+        <!-- HERO -->
+        <div class="hero">
+          <span class="badge">
+            <span class="badge-dot"></span>
+            Solar & storage guide
+          </span>
+          <h1>How much battery storage do you <span class="highlight">actually need?</span></h1>
+          <p class="subhead">Forget “how much can I afford?” — start with how much electricity your home really uses.</p>
+          <div class="meta-row">
+            <div class="meta-item">
+              <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              8 min read
+            </div>
+            <div class="meta-item">
+              <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              Updated 2025
+            </div>
+            <div class="meta-item">
+              <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              Expert reviewed
+            </div>
+          </div>
+        </div>
+
+        <!-- FEATURED IMAGE -->
+        <div class="featured-image-wrap reveal">
+          <img 
+            class="featured-image" 
+            src="https://avebattery.com/wp-content/uploads/2026/05/Avepower-home-energy-storage-battery-1024x698.webp" 
+            alt="Home battery and solar panels"
+          >
+          <div class="featured-image-caption">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Sizing a battery around real usage — not guesswork.
+          </div>
+        </div>
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+          <p class="intro-text"><strong>Most people shopping for a home battery start with the wrong question.</strong> They ask, “How much can I afford?” instead of asking, “How much battery do I actually need?”</p>
+
+          <p>The right answer starts with something simple: <strong>how much electricity does your home use each day?</strong></p>
+
+          <!-- Inline image 1 -->
+          <div class="inline-image-wrap reveal">
+            <img 
+              class="inline-image" 
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSpw-UJUAcaM0yBgkN-3GZTmt6XhORAU5MaVkKRTY8KMosbwx6WJCbsnI&s=10" 
+              alt="Electricity usage monitoring"
+            >
+            <span class="img-label">Step 01</span>
+          </div>
+          <p class="image-caption">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Start with your electricity bill — it tells the real story.
+          </p>
+
+          <h2>Start with your electricity use</h2>
+          <p>Your electricity bill can tell you how much energy your home uses. Look at your daily or monthly usage and work out your average daily consumption.</p>
+          <p>An average Australian home may use around <strong>16 kWh of electricity per day</strong>. But homes with air conditioning, electric hot water, a pool, or an EV can use much more.</p>
+
+          <h2>Bigger homes need more storage</h2>
+          <p>A larger home can easily use <strong>30 kWh or more per day</strong>. Some large homes with several major appliances and EV charging can use <strong>60 kWh or more</strong>.</p>
+          <p>This is why there is no single battery size that is right for every home. Your battery should match your actual electricity needs.</p>
+
+          <!-- Inline image 2 -->
+          <div class="inline-image-wrap reveal">
+            <img 
+              class="inline-image" 
+              src="https://www.pretapower.com/wp-content/uploads/2026/01/solar-power-for-day-and-night.jpg" 
+              alt="Evening home with lights on"
+            >
+            <span class="img-label">Step 02</span>
+          </div>
+          <p class="image-caption">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            Evening and overnight — when your battery really shines.
+          </p>
+
+          <h2>Look at your night-time usage</h2>
+          <p>Your battery is most useful when your solar panels are not producing electricity. This usually means during the evening, overnight, and early morning.</p>
+          <p>If you work during the day, much of your electricity may be used after the sun goes down. As a simple starting point, you could assume around <strong>70% of your daily energy use happens outside solar-producing hours</strong>, but your real usage pattern may be very different.</p>
+
+          <!-- HIGHLIGHT BOX -->
+          <div class="highlight-box reveal">
+            <div class="hl-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            </div>
+            <p><strong>Here’s a simple example:</strong> Imagine your home uses 16 kWh per day. If around 70% is used when your solar panels are not producing enough power, that’s about <strong>11 kWh</strong> that may need to come from your battery or the grid. That gives you a useful starting point — but it doesn’t mean you automatically need an 11 kWh battery.</p>
+          </div>
+
+          <h2>Usable capacity matters</h2>
+          <p>A battery’s advertised capacity is not always the amount of energy you can actually use. The <strong>usable capacity</strong> is the amount of stored energy available to power your home.</p>
+          <p>For example, a battery may have a higher rated capacity but provide less energy for everyday use. Always check the usable capacity before comparing battery sizes.</p>
+
+          <h2>Batteries also lose some energy</h2>
+          <p>Energy is lost when electricity moves into and out of a battery. Good LFP batteries can have around <strong>90–95% round-trip efficiency</strong>.</p>
+          <p>In simple terms, if you put 10 kWh into the battery, you may get around 9–9.5 kWh back. This is why it is useful to leave some extra capacity when sizing your battery.</p>
+
+          <!-- Inline image 3 -->
+          <div class="inline-image-wrap reveal">
+            <img 
+              class="inline-image" 
+              src="https://images.unsplash.com/photo-1545209463-e2825498edbf?q=80&w=1200&auto=format&fit=crop" 
+              alt="Home battery unit in garage"
+            >
+            <span class="img-label">Step 03</span>
+          </div>
+          <p class="image-caption">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+            Usable capacity & efficiency — two numbers that really matter.
+          </p>
+
+          <h2>How much battery do you need?</h2>
+          <p>The right battery size depends on what you want your system to do. A small battery may be enough for essential appliances, while a larger battery can cover more of your home for longer.</p>
+
+          <div class="table-wrap reveal">
+            <table>
+              <thead>
+                <tr>
+                  <th>What you want covered</th>
+                  <th>Usable battery capacity</th>
+                  <th>Typical situation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Essential appliances</td>
+                  <td><span class="capacity-pill">5–10 kWh</span></td>
+                  <td>Fridge, lights, Wi‑Fi and a few outlets</td>
+                </tr>
+                <tr>
+                  <td>Most of the home</td>
+                  <td><span class="capacity-pill">10–20 kWh</span></td>
+                  <td>Evening use, time-of-use savings and broader backup</td>
+                </tr>
+                <tr>
+                  <td>Near off-grid or long outages</td>
+                  <td><span class="capacity-pill">25 kWh+</span></td>
+                  <td>Large homes, heavy energy use or multi-day backup</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>These are <strong>starting points, not fixed rules</strong>. Your actual battery size should be based on your electricity use, solar generation, appliances and how much grid electricity you want to avoid.</p>
+
+          <h2>Going nearly grid-free needs more planning</h2>
+          <p>If your goal is to use almost no electricity from the grid, simply buying a large battery is not enough. You also need enough solar panels to recharge the battery during the day.</p>
+          <p>You also need to think about cloudy days, winter solar production, your inverter size, and how much electricity your home uses overnight.</p>
+
+          <h2>What about sending power back to the grid?</h2>
+          <p>You may produce more solar electricity than your home and battery can use. In that case, some systems can send the extra electricity back to the grid.</p>
+          <p>However, export limits and electricity plans can affect how much you can export. So, if exporting your surplus is part of your plan, check the rules for your local network and your electricity retailer.</p>
+
+          <!-- Inline image 4 -->
+          <div class="inline-image-wrap reveal">
+            <img 
+              class="inline-image" 
+              src="https://i0.wp.com/solarquarter.com/wp-content/uploads/2026/03/Understand-solar-withs-torage.png?resize=1024%2C683&quality=80&ssl=1" 
+              alt="Solar panels on roof with blue sky"
+            >
+            <span class="img-label">Step 04</span>
+          </div>
+          <p class="image-caption">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Sending surplus back to the grid? Check your export limits.
+          </p>
+
+          <h2>Bigger is not always better</h2>
+          <p>A huge battery may sound like the safest option, but it does not automatically make financial or practical sense. If your battery regularly stays half-full, you may be paying for storage that you rarely use.</p>
+          <p>The goal is not to buy the biggest battery you can afford. The goal is to buy <strong>the right amount of storage for the way your home actually uses electricity</strong>.</p>
+
+          <!-- CLOSING NOTE -->
+          <div class="closing-note reveal">
+            <h2>The simple way to think about it</h2>
+            <p>Start with your average daily electricity use. Then look at how much electricity you use after your solar stops producing, because that is where your battery can make the biggest difference.</p>
+            <p>From there, consider your solar system, usable battery capacity, efficiency, heavy appliances, EV charging, backup needs and your goal for reducing grid use.</p>
+          </div>
+
+          <!-- FINAL CTA / ANSWER -->
+          <div class="final-cta reveal">
+            <h2>So, how much battery do you actually need?</h2>
+            <p>For some Australian homes, <strong>5–10 kWh</strong> may be enough for basic backup. Homes wanting to cover most of their evening use may look at <strong>10–20 kWh</strong>, while homes aiming for near off-grid operation or longer backup may need <strong>25 kWh or more</strong>.</p>
+            <p>The important thing is to size the battery around <strong>your home, your electricity use and your goal</strong>. A well-sized solar and battery system can help you use more of your own solar power, reduce your reliance on the grid, and potentially export your surplus when conditions allow.</p>
+          </div>
+        </div>
+      </main>
+
+      <!-- SIDEBAR (desktop) -->
+      <aside class="sidebar">
+        <!-- Table of contents -->
+        <div class="sidebar-card">
+          <div class="sidebar-title">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h10"/></svg>
+            On this page
+          </div>
+          <ul class="toc-list">
+            <li><a href="#">Start with your electricity use</a></li>
+            <li><a href="#">Bigger homes need more storage</a></li>
+            <li><a href="#">Look at your night-time usage</a></li>
+            <li><a href="#">Usable capacity matters</a></li>
+            <li><a href="#">Batteries also lose some energy</a></li>
+            <li><a href="#">How much battery do you need?</a></li>
+            <li><a href="#">Bigger is not always better</a></li>
+          </ul>
+        </div>
+
+        <!-- Quick stats -->
+        <div class="sidebar-card">
+          <div class="sidebar-title">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            Quick numbers
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            </div>
+            <div>
+              <div class="stat-label">Average home</div>
+              <div class="stat-value">16 kWh/day</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            </div>
+            <div>
+              <div class="stat-label">Evening usage</div>
+              <div class="stat-value">~70%</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <div>
+              <div class="stat-label">LFP efficiency</div>
+              <div class="stat-value">90–95%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mini CTA -->
+        <div class="sidebar-card" style="background: linear-gradient(135deg, var(--orange-soft), #fff); border-color: rgba(249,115,22,0.2);">
+          <div class="sidebar-title">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Not sure where to start?
+          </div>
+          <p style="font-size: 0.88rem; margin-bottom: 1rem; color: var(--gray-700);">Use our free battery sizing calculator to get a personalised estimate.</p>
+          <a href="#" style="display: block; text-align: center; background: var(--orange); color: white; padding: 0.7rem; border-radius: 40px; font-weight: 600; font-size: 0.9rem; text-decoration: none; box-shadow: var(--shadow-orange); transition: all 0.2s ease;">Try the calculator →</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    // Scroll progress bar
+    const progressBar = document.getElementById('progressBar');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = progress + '%';
+    });
+
+    // Scroll reveal with IntersectionObserver
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
